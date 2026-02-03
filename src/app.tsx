@@ -6,13 +6,13 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
-import * as styles from "./app.module.scss";
 import { Header } from "./components/Header/Header";
 import { Menu } from "./components/Menu/Menu";
 import { RegisterCardForm } from "./components/RegisterCardForm/RegisterCardForm";
 import { ASBCulture } from "./components/ASBCulture/ASBCulture";
 import { AboutMe } from "./components/AboutMe/AboutMe";
 import { WelcomeSection } from "./components/WelcomeSection/WelcomeSection";
+import { UserProvider } from "./UserContext";
 
 const AppContent = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -86,8 +86,10 @@ const AppContent = () => {
 
 export const App = () => {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <UserProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </UserProvider>
   );
 };
