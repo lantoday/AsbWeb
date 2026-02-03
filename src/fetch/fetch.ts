@@ -33,6 +33,10 @@ async function makeRequest<T>(
     } as unknown as T;
   }
 
+  if (relativeUrl.includes("Account/RegisterCard")) {
+    return { success: true } as unknown as T;
+  }
+
   const body = bodyData ? JSON.stringify(bodyData) : undefined;
   const absoluteUrl =
     BASE_URL +
@@ -53,7 +57,7 @@ async function makeRequest<T>(
         if (!response.ok) {
             throw new Error(response.statusText || 'Oops! Something went wrong.');
         }
-    */
+        */
 
     const text = await response.text();
     return (text ? JSON.parse(text) : {}) as T;
