@@ -6,6 +6,8 @@ export const AboutMe: React.FC = () => {
   const { user, loading, error } = useUser();
 
   if (loading) return <LoadingIcon />;
+
+  // TODO: Should have an error state design with non-hardcoded text
   if (error || !user) return <p>User not found or error loading.</p>;
 
   return (

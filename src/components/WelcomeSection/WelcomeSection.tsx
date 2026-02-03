@@ -9,7 +9,6 @@ export const WelcomeSection: React.FC = () => {
   if (loading) return <LoadingIcon />;
 
   if (error) {
-    // Handle error state
     // TODO: Should have an error state design with non-hardcoded text
     return (
       <div

@@ -31,7 +31,9 @@ export const RegisterCardForm: React.FC = () => {
 
       setSubmitSuccess("Card registered successfully!");
       reset();
+      //TODO: probalby need to display registered card infomation after successful register
     } catch (err: any) {
+      //TODO: setup error for different error cases & environments, i.e. dev, staging, production
       setSubmitError(err.message || "An unexpected error occurred.");
     } finally {
       setIsSubmittingInternal(false);
