@@ -1,21 +1,23 @@
+@import "../../styles/variables";
+
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: $overlay-bg;
   display: flex;
   justify-content: flex-start;
   z-index: 1000;
 }
 
 .menu {
-  background: white;
+  background: $white;
   width: 250px;
   height: 100%;
   padding: 2rem;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 0 5px $shadow-light;
 
   ul {
     list-style: none;
@@ -24,10 +26,10 @@
     li {
       padding: 1rem 0;
       cursor: pointer;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid $gray-eee;
 
       &:hover {
-        color: orange;
+        color: $color-brand;
       }
     }
   }
