@@ -78,7 +78,16 @@ export const RegisterCardForm: React.FC = () => {
                 e.target.value = e.target.value.replace(/\D/g, "").slice(0, 16);
               },
             })}
-            placeholder="Credit card number"
+            placeholder={
+              focusedField === "cardNumber"
+                ? "0000 0000 0000 0000"
+                : "Credit card number"
+            }
+            onFocus={() => setFocusedField("cardNumber")}
+            onBlur={(e) => {
+              register("cardNumber").onBlur(e);
+              setFocusedField(null);
+            }}
             data-testid="registration-form__input-card-number"
           />
           {errors.cardNumber && (
@@ -102,7 +111,12 @@ export const RegisterCardForm: React.FC = () => {
                     .slice(0, 4);
                 },
               })}
-              placeholder="CVC"
+              placeholder={focusedField === "cvc" ? "000" : "CVC"}
+              onFocus={() => setFocusedField("cvc")}
+              onBlur={(e) => {
+                register("cvc").onBlur(e);
+                setFocusedField(null);
+              }}
               data-testid="registration-form__input-cvc"
             />
             {errors.cvc && (
@@ -120,7 +134,12 @@ export const RegisterCardForm: React.FC = () => {
                   message: "Expiry must be MM/YY",
                 },
               })}
-              placeholder="Expiry"
+              placeholder={focusedField === "expiry" ? "MM/YY" : "Expiry"}
+              onFocus={() => setFocusedField("expiry")}
+              onBlur={(e) => {
+                register("expiry").onBlur(e);
+                setFocusedField(null);
+              }}
               data-testid="registration-form__input-expiry"
             />
             {errors.expiry && (
