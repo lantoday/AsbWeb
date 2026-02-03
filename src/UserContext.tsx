@@ -5,7 +5,7 @@ import { AccountService } from "./Account/AccountService";
 interface UserContextType {
   user: User | null;
   loading: boolean;
-  error: any;
+  error: Error | null;
   refreshUser: () => Promise<void>;
 }
 
@@ -16,7 +16,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<any>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   const fetchUser = async () => {
     setLoading(true);
@@ -24,8 +24,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       const data = await AccountService.getProfile();
       setUser(data);
       setError(null);
-    } catch (err) {
-      setError(err);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err);
+      } else {
+        setError(new Error(String(err)));
+      }
     } finally {
       setLoading(false);
     }
