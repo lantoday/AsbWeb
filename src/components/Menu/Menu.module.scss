@@ -1,0 +1,34 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: flex-start;
+  z-index: 1000;
+}
+
+.menu {
+  background: white;
+  width: 250px;
+  height: 100%;
+  padding: 2rem;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      padding: 1rem 0;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+
+      &:hover {
+        color: orange;
+      }
+    }
+  }
+}
