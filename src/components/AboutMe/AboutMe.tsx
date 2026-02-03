@@ -1,11 +1,11 @@
 import React from "react";
-import { User } from "../../Models/UserModel";
 import { useUser } from "../../UserContext";
+import { LoadingIcon } from "../LoadingIcon/LoadingIcon";
 
 export const AboutMe: React.FC = () => {
   const { user, loading, error } = useUser();
 
-  if (loading) return <p> loading... </p>;
+  if (loading) return <LoadingIcon />;
   if (error || !user) return <p>User not found or error loading.</p>;
 
   return (
