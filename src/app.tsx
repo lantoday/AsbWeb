@@ -6,6 +6,7 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
+import * as styles from "./app.module.scss";
 import { Header } from "./components/Header/Header";
 import { Menu } from "./components/Menu/Menu";
 import { RegisterCardForm } from "./components/RegisterCardForm/RegisterCardForm";
@@ -33,7 +34,7 @@ const AppContent = () => {
   };
 
   return (
-    <div data-testid="app__container">
+    <div className={styles.app} data-testid="app__container">
       <Header
         onBurgerClick={toggleMenu}
         onBackClick={() => navigate("/")}
@@ -49,14 +50,14 @@ const AppContent = () => {
           else navigate("/");
         }}
       />
-      <main>
+      <main className={styles.main}>
         <Routes>
           <Route
             path="/"
             element={
-              <div>
+              <div className={styles.registerSplitView}>
                 <WelcomeSection />
-                <div>
+                <div className={styles.formSection}>
                   <RegisterCardForm />
                 </div>
               </div>
@@ -65,7 +66,7 @@ const AppContent = () => {
           <Route
             path="/AsbCulture"
             element={
-              <div data-testid="app__asb-culture-page">
+              <div className={styles.page} data-testid="app__asb-culture-page">
                 <ASBCulture />
               </div>
             }
@@ -73,7 +74,7 @@ const AppContent = () => {
           <Route
             path="/AboutMe"
             element={
-              <div data-testid="app__about-me-page">
+              <div className={styles.page} data-testid="app__about-me-page">
                 <AboutMe />
               </div>
             }

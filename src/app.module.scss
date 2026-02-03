@@ -1,4 +1,59 @@
+@import "./styles/variables";
+
+.app {
+  font-family: "Roboto", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.registerSplitView {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+}
+
+.welcomeSection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $gray-f0;
+  padding: 2rem;
+}
+
+.formSection {
+  flex: 1;
+  border-top: 1px solid $gray-ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (min-width: 768px) {
+    border-top: none;
+    border-left: 1px solid $gray-ddd;
+  }
+}
+
+.page {
+  padding: 2rem;
+}
+
+.home {
+  padding: 2rem;
+  text-align: center;
+}
+
 .demo {
-  font-family: "Roboto";
-  color: orange;
+  color: $color-brand;
 }
