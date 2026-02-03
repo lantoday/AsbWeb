@@ -1,10 +1,28 @@
 // Brand colors
 $color-brand: #fcbd1b;
+$color-brand-dark: darken(#fcbd1b, 10%);
+$color-brand-alpha: rgba(252, 189, 27, 0.2);
 
 // Neutral colors
+$white: #ffffff;
+$black: #000000;
+$gray-f9: #f9f9f9;
 $gray-f8: #f8f9fa;
-$gray-dee: #dee2e6;
+$gray-f0: #f0f0f0;
 $gray-eee: #eee;
+$gray-ddd: #ddd;
+$gray-ccc: #ccc;
+$gray-dee: #dee2e6;
+
+// Feedback colors
+$error: red;
+$error-bg: #fee2e2;
+$error-text: #b91c1c;
+$error-border: #fecaca;
+
+$success-bg: #d1e7dd;
+$success-text: #146c43;
+$success-border: #badbcc;
 
 // Other colors
 $overlay-bg: rgba(0, 0, 0, 0.5);
