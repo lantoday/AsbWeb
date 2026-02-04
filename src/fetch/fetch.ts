@@ -14,29 +14,6 @@ async function makeRequest<T>(
   relativeUrl: string,
   bodyData?: object,
 ) {
-  // Faking responses for specific endpoints as requested
-  if (relativeUrl.includes("Account/Profile")) {
-    return {
-      FirstName: "Lan",
-      LastName: "Chen",
-      Occupation: "Software Engineer",
-      TechSet: [
-        ".NET",
-        "React",
-        "TypeScript",
-        "SCSS",
-        "Azure DevOps",
-        "Microsoft Azure",
-        "SQL",
-        "Git",
-      ],
-    } as unknown as T;
-  }
-
-  if (relativeUrl.includes("Account/RegisterCard")) {
-    return { success: true } as unknown as T;
-  }
-
   const body = bodyData ? JSON.stringify(bodyData) : undefined;
   const absoluteUrl =
     BASE_URL +
@@ -58,6 +35,29 @@ async function makeRequest<T>(
             throw new Error(response.statusText || 'Oops! Something went wrong.');
         }
         */
+
+    // Faking responses for specific endpoints as requested
+    if (relativeUrl.includes("Account/Profile")) {
+      return {
+        FirstName: "Lan",
+        LastName: "Chen",
+        Occupation: "Software Engineer",
+        TechSet: [
+          ".NET",
+          "React",
+          "TypeScript",
+          "SCSS",
+          "Azure DevOps",
+          "Microsoft Azure",
+          "SQL",
+          "Git",
+        ],
+      } as unknown as T;
+    }
+
+    if (relativeUrl.includes("Account/RegisterCard")) {
+      return { success: true } as unknown as T;
+    }
 
     const text = await response.text();
     return (text ? JSON.parse(text) : {}) as T;
