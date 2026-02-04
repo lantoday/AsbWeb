@@ -1,14 +1,59 @@
-import React, { useState } from "react";
+import React, { useReducer } from "react";
 import { useForm } from "react-hook-form";
 import * as styles from "./RegisterCardForm.module.scss";
 import { AccountService } from "../../Account/AccountService";
 import { CardModel } from "../../Models/CardModel";
 
+interface FormState {
+  isSubmittingInternal: boolean;
+  submitError: string | null;
+  submitSuccess: string | null;
+  focusedField: string | null;
+}
+
+type FormAction =
+  | { type: "SUBMIT_START" }
+  | { type: "SUBMIT_SUCCESS"; payload: string }
+  | { type: "SUBMIT_ERROR"; payload: string }
+  | { type: "SET_FOCUS"; payload: string | null };
+
+const formReducer = (state: FormState, action: FormAction): FormState => {
+  switch (action.type) {
+    case "SUBMIT_START":
+      return {
+        ...state,
+        isSubmittingInternal: true,
+        submitError: null,
+        submitSuccess: null,
+      };
+    case "SUBMIT_SUCCESS":
+      return {
+        ...state,
+        isSubmittingInternal: false,
+        submitSuccess: action.payload,
+      };
+    case "SUBMIT_ERROR":
+      return {
+        ...state,
+        isSubmittingInternal: false,
+        submitError: action.payload,
+      };
+    case "SET_FOCUS":
+      return { ...state, focusedField: action.payload };
+    default:
+      return state;
+  }
+};
+
+const initialState: FormState = {
+  isSubmittingInternal: false,
+  submitError: null,
+  submitSuccess: null,
+  focusedField: null,
+};
+
 export const RegisterCardForm: React.FC = () => {
-  const [isSubmittingInternal, setIsSubmittingInternal] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
-  const [focusedField, setFocusedField] = useState<string | null>(null);
+  const [state, dispatch] = useReducer(formReducer, initialState);
 
   const {
     register,
@@ -18,20 +63,19 @@ export const RegisterCardForm: React.FC = () => {
   } = useForm<CardModel>();
 
   const onSubmit = async (data: CardModel) => {
-    setSubmitError(null);
-    setSubmitSuccess(null);
-    setIsSubmittingInternal(true);
+    dispatch({ type: "SUBMIT_START" });
     try {
       await AccountService.registerCard(data);
-
-      setSubmitSuccess("Card registered successfully!");
+      dispatch({
+        type: "SUBMIT_SUCCESS",
+        payload: "Card registered successfully!",
+      });
       reset();
-      //TODO: probalby need to display registered card infomation after successful register
     } catch (err: any) {
-      //TODO: setup error for different error cases & environments, i.e. dev, staging, production
-      setSubmitError(err.message || "An unexpected error occurred.");
-    } finally {
-      setIsSubmittingInternal(false);
+      dispatch({
+        type: "SUBMIT_ERROR",
+        payload: err.message || "An unexpected error occurred.",
+      });
     }
   };
 
@@ -40,20 +84,20 @@ export const RegisterCardForm: React.FC = () => {
       className={styles.container}
       data-testid="registration-form__container"
     >
-      {submitError && (
+      {state.submitError && (
         <div
           className={styles.submitError}
           data-testid="registration-form__submit-error"
         >
-          {submitError}
+          {state.submitError}
         </div>
       )}
-      {submitSuccess && (
+      {state.submitSuccess && (
         <div
           className={styles.submitSuccess}
           data-testid="registration-form__submit-success"
         >
-          {submitSuccess}
+          {state.submitSuccess}
         </div>
       )}
       <form
@@ -76,14 +120,16 @@ export const RegisterCardForm: React.FC = () => {
               },
             })}
             placeholder={
-              focusedField === "cardNumber"
+              state.focusedField === "cardNumber"
                 ? "0000 0000 0000 0000"
                 : "Credit card number"
             }
-            onFocus={() => setFocusedField("cardNumber")}
+            onFocus={() =>
+              dispatch({ type: "SET_FOCUS", payload: "cardNumber" })
+            }
             onBlur={(e) => {
               register("cardNumber").onBlur(e);
-              setFocusedField(null);
+              dispatch({ type: "SET_FOCUS", payload: null });
             }}
             data-testid="registration-form__input-card-number"
           />
@@ -108,11 +154,11 @@ export const RegisterCardForm: React.FC = () => {
                     .slice(0, 4);
                 },
               })}
-              placeholder={focusedField === "cvc" ? "000" : "CVC"}
-              onFocus={() => setFocusedField("cvc")}
+              placeholder={state.focusedField === "cvc" ? "000" : "CVC"}
+              onFocus={() => dispatch({ type: "SET_FOCUS", payload: "cvc" })}
               onBlur={(e) => {
                 register("cvc").onBlur(e);
-                setFocusedField(null);
+                dispatch({ type: "SET_FOCUS", payload: null });
               }}
               data-testid="registration-form__input-cvc"
             />
@@ -131,11 +177,11 @@ export const RegisterCardForm: React.FC = () => {
                   message: "Expiry must be MM/YY",
                 },
               })}
-              placeholder={focusedField === "expiry" ? "MM/YY" : "Expiry"}
-              onFocus={() => setFocusedField("expiry")}
+              placeholder={state.focusedField === "expiry" ? "MM/YY" : "Expiry"}
+              onFocus={() => dispatch({ type: "SET_FOCUS", payload: "expiry" })}
               onBlur={(e) => {
                 register("expiry").onBlur(e);
-                setFocusedField(null);
+                dispatch({ type: "SET_FOCUS", payload: null });
               }}
               data-testid="registration-form__input-expiry"
             />
@@ -148,9 +194,9 @@ export const RegisterCardForm: React.FC = () => {
           type="submit"
           className={styles.submitButton}
           data-testid="registration-form__button-submit"
-          disabled={isSubmittingInternal}
+          disabled={state.isSubmittingInternal}
         >
-          {isSubmittingInternal ? "Submitting..." : "Submit"}
+          {state.isSubmittingInternal ? "Submitting..." : "Submit"}
         </button>
       </form>
     </div>

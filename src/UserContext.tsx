@@ -1,47 +1,72 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useCallback,
+} from "react";
 import { User } from "./Models/UserModel";
 import { AccountService } from "./Account/AccountService";
 
-interface UserContextType {
+interface UserState {
   user: User | null;
   loading: boolean;
   error: Error | null;
+}
+
+type UserAction =
+  | { type: "FETCH_START" }
+  | { type: "FETCH_SUCCESS"; payload: User }
+  | { type: "FETCH_ERROR"; payload: Error };
+
+const userReducer = (state: UserState, action: UserAction): UserState => {
+  switch (action.type) {
+    case "FETCH_START":
+      return { ...state, loading: true, error: null };
+    case "FETCH_SUCCESS":
+      return { ...state, loading: false, user: action.payload, error: null };
+    case "FETCH_ERROR":
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+interface UserContextType extends UserState {
   refreshUser: () => Promise<void>;
+  dispatch: React.Dispatch<UserAction>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
+const initialState: UserState = {
+  user: null,
+  loading: true,
+  error: null,
+};
+
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [state, dispatch] = useReducer(userReducer, initialState);
 
-  const fetchUser = async () => {
-    setLoading(true);
+  const fetchUser = useCallback(async () => {
+    dispatch({ type: "FETCH_START" });
     try {
       const data = await AccountService.getProfile();
-      setUser(data);
-      setError(null);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err);
-      } else {
-        setError(new Error(String(err)));
-      }
-    } finally {
-      setLoading(false);
+      dispatch({ type: "FETCH_SUCCESS", payload: data });
+    } catch (err: any) {
+      dispatch({ type: "FETCH_ERROR", payload: err });
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, [fetchUser]);
 
   return (
     <UserContext.Provider
-      value={{ user, loading, error, refreshUser: fetchUser }}
+      value={{ ...state, refreshUser: fetchUser, dispatch }}
     >
       {children}
     </UserContext.Provider>
