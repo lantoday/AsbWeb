@@ -2,12 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as styles from "./RegisterCardForm.module.scss";
 import { AccountService } from "../../Account/AccountService";
-
-interface IFormInput {
-  cardNumber: string;
-  cvc: string;
-  expiry: string;
-}
+import { CardModel } from "../../Models/CardModel";
 
 export const RegisterCardForm: React.FC = () => {
   const [isSubmittingInternal, setIsSubmittingInternal] = useState(false);
@@ -20,9 +15,9 @@ export const RegisterCardForm: React.FC = () => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<IFormInput>();
+  } = useForm<CardModel>();
 
-  const onSubmit = async (data: IFormInput) => {
+  const onSubmit = async (data: CardModel) => {
     setSubmitError(null);
     setSubmitSuccess(null);
     setIsSubmittingInternal(true);
